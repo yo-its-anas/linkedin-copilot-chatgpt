@@ -1,0 +1,38 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "linkedin-copilot-chatgpt",
+  "version": "2.0.0",
+  "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
+  "license": "MIT",
+  "keywords": [
+    "linkedin",
+    "writing",
+    "content-strategy",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "LinkedIn Copilot for ChatGPT",
+        "shortDescription": "LinkedIn workflows in your voice",
+        "longDescription": "Eleven LinkedIn writing and analysis workflows with natural language routing, saved voice preferences and an OAuth-connected MCP app. API capabilities depend on LinkedIn product grants.",
+        "developerName": "Muhammad Anas",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Draft a LinkedIn post in my voice.",
+          "Audit my posts and plan next week.",
+          "Turn this article into a LinkedIn carousel."
+        ],
+        "brandColor": "#0A66C2"
+      }
+    }
+  },
+  "author": {
+    "name": "Muhammad Anas",
+    "url": "https://www.linkedin.com/in/muhammad-anas-a35b1a334/"
+  }
+}

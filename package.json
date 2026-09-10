@@ -1,0 +1,48 @@
+{
+  "name": "linkedin-copilot-chatgpt",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env --import tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "check": "npm run build && npm test && npm run validate:plugin",
+    "validate:plugin": "node scripts/validate-plugin.mjs",
+    "package:plugin": "node scripts/package-plugin.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.25.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.0",
+    "@types/supertest": "^6.0.3",
+    "fflate": "^0.8.3",
+    "supertest": "^7.1.4",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11",
+    "yaml": "^2.8.3"
+  },
+  "author": {
+    "name": "Muhammad Anas",
+    "url": "https://www.linkedin.com/in/muhammad-anas-a35b1a334/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git"
+  },
+  "homepage": "https://github.com/yo-its-anas/linkedin-copilot-chatgpt#readme"
+}

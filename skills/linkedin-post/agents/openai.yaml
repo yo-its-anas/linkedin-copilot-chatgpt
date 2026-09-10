@@ -1,0 +1,6 @@
+interface:
+  display_name: "LinkedIn Post"
+  short_description: "LinkedIn post workflow with your voice"
+policy:
+  allow_implicit_invocation: true
+

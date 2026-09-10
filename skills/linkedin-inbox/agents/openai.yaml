@@ -1,0 +1,5 @@
+interface:
+  display_name: "LinkedIn Inbox"
+  short_description: "Triage supplied messages and draft replies"
+policy:
+  allow_implicit_invocation: true

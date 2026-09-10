@@ -1,0 +1,6 @@
+interface:
+  display_name: "LinkedIn Comment"
+  short_description: "LinkedIn comment workflow with your voice"
+policy:
+  allow_implicit_invocation: true
+

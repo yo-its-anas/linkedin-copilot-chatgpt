@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+node_modules
+dist
+data
+release
+coverage
+__pycache__
+*.sqlite*
+*.log
