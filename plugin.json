@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "linkedin-copilot-chatgpt",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
   "license": "MIT",
   "keywords": [
@@ -14,8 +14,8 @@
     "com.openai": {
       "interface": {
         "displayName": "LinkedIn Copilot for ChatGPT",
-        "shortDescription": "LinkedIn workflows in your voice",
-        "longDescription": "Eleven LinkedIn writing and analysis workflows with natural language routing, saved voice preferences and an OAuth-connected MCP app. API capabilities depend on LinkedIn product grants.",
+        "shortDescription": "Plan, write and engage in one chat",
+        "longDescription": "Install twelve reusable LinkedIn skills and start drafting in ChatGPT. Connect the optional Copilot MCP app for saved preferences and supported official API actions.",
         "developerName": "Muhammad Anas",
         "category": "Productivity",
         "capabilities": [
@@ -23,9 +23,9 @@
           "Write"
         ],
         "defaultPrompt": [
-          "Draft a LinkedIn post in my voice.",
-          "Audit my posts and plan next week.",
-          "Turn this article into a LinkedIn carousel."
+          "What can LinkedIn Copilot help me with?",
+          "Draft a LinkedIn post in my voice, then turn it into a carousel.",
+          "Plan my content for next week."
         ],
         "brandColor": "#0A66C2"
       }

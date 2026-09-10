@@ -38,6 +38,12 @@ describe('remote MCP HTTP contract', () => {
     expect(post.securitySchemes[0].scopes).toEqual(['linkedin:write']);
     expect(provider).not.toHaveBeenCalled();
   });
+  it('serves workflow instructions in a chat without prompting for account access', async () => {
+    const response = await rpc('tools/call', { name: 'linkedin_get_workflow', arguments: { workflow: 'linkedin-plan' } }).expect(200);
+    expect(response.body.result.structuredContent.result.instructions).toContain('name: linkedin-plan');
+    expect(response.body.result._meta?.['mcp/www_authenticate']).toBeUndefined();
+    expect(provider).not.toHaveBeenCalled();
+  });
   it('returns tool-level OAuth linking information for anonymous private reads', async () => {
     const response = await rpc('tools/call', { name: 'linkedin_get_my_profile', arguments: {} }).expect(200);
     expect(response.body.result.isError).toBe(true);

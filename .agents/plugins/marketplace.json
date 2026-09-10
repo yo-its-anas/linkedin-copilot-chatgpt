@@ -1,0 +1,21 @@
+{
+  "name": "linkedin-copilot",
+  "interface": {
+    "displayName": "LinkedIn Copilot by Muhammad Anas"
+  },
+  "plugins": [
+    {
+      "name": "linkedin-copilot-chatgpt",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

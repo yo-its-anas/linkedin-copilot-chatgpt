@@ -6,6 +6,7 @@ import type { AuthService, Session } from './auth.js';
 import type { Store } from './store.js';
 import type { LinkedInClient } from './linkedin.js';
 import { AppError } from './errors.js';
+import { copilotCatalog, isCopilotTool, callCopilotTool } from './copilot.js';
 
 const postUrn = z.string().regex(/^urn:li:(share|ugcPost):[0-9]+$/).max(100);
 const commentUrn = z.string().regex(/^urn:li:comment:\(urn:li:(activity|share|ugcPost):[0-9]+,[0-9]+\)$/).max(180);
@@ -47,7 +48,7 @@ export class ToolService {
   }
 
   catalog() {
-    return this.enabled().map(spec => {
+    return [...copilotCatalog, ...this.enabled().map(spec => {
       const securitySchemes = [{ type: 'oauth2', scopes: [spec.scope] }];
       const { $schema: _schema, ...inputSchema } = zodToJsonSchema(spec.schema, { target: 'jsonSchema7', $refStrategy: 'none' });
       return {
@@ -56,11 +57,12 @@ export class ToolService {
         annotations: { readOnlyHint: !spec.write, destructiveHint: Boolean(spec.destructive), openWorldHint: Boolean(spec.external || spec.name === 'linkedin_get_comments'), idempotentHint: !spec.write || Boolean(spec.idempotent) },
         securitySchemes, _meta: { securitySchemes },
       };
-    });
+    })];
   }
 
   async call(name: string, input: unknown, session?: Session) {
     try {
+      if (isCopilotTool(name)) return callCopilotTool(name, input, this.catalog().map(tool => tool.name));
       const spec = this.enabled().find(s => s.name === name);
       if (!spec) throw new AppError('unsupported_tool', 'This capability is not implemented or enabled for this app.', 404);
       if (!session) throw new AppError('authentication_required', 'Connect your LinkedIn account to use this tool.', 401);

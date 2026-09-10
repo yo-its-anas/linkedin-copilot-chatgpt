@@ -41,3 +41,14 @@ Record the workspace/model, plugin version, deployed commit or artifact digest,
 enabled scopes, prompt, selected skill/tools, displayed review arguments, actual
 result and date. Keep recordings free of tokens and personal third-party content.
 Failures should become narrowly scoped regression tests where reproducible.
+
+
+## Installation and onboarding acceptance cases
+
+- Install the default marketplace package without running Node or connecting LinkedIn. Ask for a post: get a draft without a localhost error.
+- Ask "What skills does Copilot have?": describe this project's twelve workflows, not an unrelated search connector.
+- With only the Copilot MCP app available, load the plan workflow and apply it to supplied notes. Do not claim it was installed into memory.
+- Follow "draft this" with "humanize it", then "make a carousel": retain relevant context in the same chat.
+- Connect a different LinkedIn plugin: do not claim it enables Copilot publishing or saved preferences.
+- Ask to publish while disconnected: use the protected tool's account-linking flow; public help must not unlock the write.
+- Install a registered-app package and verify the canonical app ID resolves without duplicate MCP connections.

@@ -1,5 +1,5 @@
 interface:
-  display_name: "LinkedIn Workflow Router"
-  short_description: "Coordinate LinkedIn writing and analysis"
+  display_name: "LinkedIn Copilot"
+  short_description: "Get started and coordinate LinkedIn workflows"
 policy:
   allow_implicit_invocation: true

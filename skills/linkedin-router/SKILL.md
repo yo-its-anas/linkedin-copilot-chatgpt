@@ -1,6 +1,6 @@
 ---
 name: linkedin-router
-description: Coordinate multiple LinkedIn writing, planning, analysis, and response workflows from natural language. Use for compound LinkedIn goals, ambiguous LinkedIn requests, or choosing the next workflow; focused tasks can use their own skill directly.
+description: Coordinate multiple LinkedIn writing, planning, analysis, and response workflows from natural language. Use for compound LinkedIn goals, ambiguous LinkedIn requests, choosing the next workflow, or getting started with LinkedIn Copilot and understanding its skills; focused tasks can use their own skill directly.
 ---
 
 # LinkedIn workflow router
@@ -11,6 +11,32 @@ Translate a LinkedIn goal into the smallest useful sequence of focused skills.
 Use for compound requests such as auditing content and building a weekly plan,
 or selecting the strongest post and adapting it to a carousel. Slash commands
 are unnecessary. Descriptions let ChatGPT select skills automatically.
+
+## Getting started in one chat
+
+For "What can Copilot do?" or "What skills do you have?", explain this product's
+writing and analysis workflows from the table below. This is **LinkedIn Copilot
+for ChatGPT by Muhammad Anas**, separate from other plugins named LinkedIn.
+If its MCP tools are available, `linkedin_get_copilot_guide` reports its workflow
+library and configured tools without requiring LinkedIn authentication.
+Configured tools do not prove that a user has authorized them.
+
+Offer a useful first task: a post, weekly plan or review of supplied content.
+Continue edits, carousel adaptations and engagement drafts in the same chat,
+carrying forward relevant context. Do not force a menu or repeated onboarding.
+If an installed skill cannot be loaded but the Copilot MCP app is available,
+`linkedin_get_workflow` can return its canonical instructions and reference data.
+Use it for the selected workflow only; it does not install a skill or execute it.
+
+Never substitute a different LinkedIn connector for this product or claim its
+capabilities from its name. Discover the tools actually exposed in this chat.
+Do not claim installation, connection, persistent memory or a completed action
+without a corresponding host/tool result. Installed skills belong to the host;
+saved writing preferences belong to the authenticated Copilot app. A GitHub URL
+in a chat alone does not install this plugin. When asked to install, use an
+available host installer or explain the supported marketplace setup in the
+[installation guide](../../docs/INSTALLATION.md). OAuth and install confirmation
+remain host-controlled. Use conversation context for drafts without connecting.
 
 ## When not to trigger
 

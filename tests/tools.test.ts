@@ -48,7 +48,7 @@ describe('tool discovery and host action permissions', () => {
   });
   it('omits unsupported capabilities and provider tools without configured grants', () => {
     const minimal = new ToolService({ ...config, linkedinScopes: ['openid', 'profile'] }, store, auth, client);
-    expect(minimal.catalog()).toHaveLength(5);
+    expect(minimal.catalog()).toHaveLength(7);
     expect(minimal.catalog().some(t => /send_message|get_conversations|get_profile|search_posts|get_notifications|update_profile|create_post/.test(t.name))).toBe(false);
   });
   it('starts the linking flow with an authentication challenge rather than leaking data', async () => {
@@ -143,5 +143,35 @@ describe('isolated context and writes', () => {
     const result = await service.call('linkedin_get_my_profile', {}, session);
     expect(failure(result).error).toBe('internal_error');
     expect(JSON.stringify(result)).not.toMatch(/secret-token|private stack/);
+  });
+});
+
+
+describe('public Copilot onboarding and workflow access', () => {
+  it('explains all skills without reading account data or granting live capabilities', async () => {
+    const result = await service.call('linkedin_get_copilot_guide', {});
+    expect(result.isError).toBeUndefined();
+    expect(result.structuredContent?.result.workflows).toHaveLength(12);
+    expect(result.structuredContent?.result.accountStatus).toContain('Not checked');
+    expect(auth.getAccount).not.toHaveBeenCalled();
+    expect(audit).not.toHaveBeenCalled();
+  });
+  it.each(['linkedin-post', 'linkedin-plan', 'linkedin-audit', 'linkedin-profile', 'linkedin-humanize', 'linkedin-carousel', 'linkedin-repurpose', 'linkedin-comment', 'linkedin-reply', 'linkedin-dm', 'linkedin-inbox', 'linkedin-router'])('loads the canonical %s workflow without authentication', async workflow => {
+    const response = await service.call('linkedin_get_workflow', { workflow });
+    expect(response.isError).toBeUndefined();
+    expect(response.structuredContent?.result.instructions).toContain(`name: ${workflow}`);
+    expect(auth.getAccount).not.toHaveBeenCalled();
+  });
+  it('includes the original hook catalog when loading the post workflow', async () => {
+    const response = await service.call('linkedin_get_workflow', { workflow: 'linkedin-post' });
+    expect((response.structuredContent?.result.resources as any)['hooks.json'].hooks).toHaveLength(21);
+  });
+  it.each([{ workflow: '../../.env' }, { workflow: 'linkedin-post', path: '.env' }, { workflow: 'linkedin-send-message' }])('rejects arbitrary paths and unsupported workflows: %j', async input => {
+    expect(failure(await service.call('linkedin_get_workflow', input)).error).toBe('invalid_input');
+    expect(auth.getAccount).not.toHaveBeenCalled();
+  });
+  it('annotates only public help as noauth; publishing remains protected', () => {
+    expect(service.catalog().find(t => t.name === 'linkedin_get_workflow')?.securitySchemes).toEqual([{ type: 'noauth' }]);
+    expect(service.catalog().find(t => t.name === 'linkedin_create_post')?.securitySchemes).toEqual([{ type: 'oauth2', scopes: ['linkedin:write'] }]);
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "linkedin-copilot-chatgpt",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
   "author": {
     "name": "Muhammad Anas",
@@ -8,11 +8,10 @@
   },
   "license": "MIT",
   "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "LinkedIn Copilot for ChatGPT",
-    "shortDescription": "LinkedIn workflows in your voice",
-    "longDescription": "Draft, plan and improve LinkedIn content, then use supported official API actions under the host's app permissions.",
+    "shortDescription": "Plan, write and engage in one chat",
+    "longDescription": "Install twelve reusable LinkedIn skills and start drafting in ChatGPT. Connect the optional Copilot MCP app for saved preferences and supported official API actions.",
     "developerName": "Muhammad Anas",
     "category": "Productivity",
     "capabilities": [
@@ -20,9 +19,9 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Draft a LinkedIn post in my voice.",
-      "Audit my posts and plan next week.",
-      "Turn this article into a LinkedIn carousel."
+      "What can LinkedIn Copilot help me with?",
+      "Draft a LinkedIn post in my voice, then turn it into a carousel.",
+      "Plan my content for next week."
     ]
   }
 }

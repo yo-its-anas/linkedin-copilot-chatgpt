@@ -3,6 +3,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { parse } from 'yaml';
+import { normalizeAppId } from './plugin-config.mjs';
 
 export const repository = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export function validatePlugin(root = repository) {
@@ -23,13 +24,36 @@ export function validatePlugin(root = repository) {
     const endpoint = new URL(connection.url);
     assert.equal(endpoint.pathname, '/mcp');
     assert.ok(endpoint.protocol === 'https:' || (endpoint.protocol === 'http:' && endpoint.hostname === 'localhost'));
-  } else {
-    assert.ok(apps['linkedin-copilot-chatgpt'], 'A registered app mapping or bundled MCP URL is required.');
+  }
+  const compatibility = readJson('.mcp.json');
+  if (Object.keys(apps).length) {
     assert.equal(manifest.extensions['com.openai'].apps, './.app.json');
+    assert.equal(overlay.apps, './.app.json');
+    assert.equal(Object.keys(mcp.mcpServers).length, 0, 'Registered apps must not duplicate bundled MCP connections.');
+    assert.equal(Object.keys(compatibility.mcpServers).length, 0);
+    assert.equal(overlay.mcpServers, undefined);
+  } else if (!connection) {
+    assert.equal(Object.keys(mcp.mcpServers).length, 0);
+    assert.equal(Object.keys(compatibility.mcpServers).length, 0);
+    assert.equal(overlay.mcpServers, undefined, 'Skills-only installs must not require a server.');
+    assert.equal(manifest.extensions['com.openai'].apps, undefined);
+    assert.equal(overlay.apps, undefined);
+  } else {
+    assert.equal(compatibility.mcpServers[manifest.name]?.url, connection.url);
+    assert.equal(overlay.mcpServers, './.mcp.json');
   }
   for (const app of Object.values(apps)) {
-    assert.match(app.id, /^(plugin_asdk_app|connector_)[A-Za-z0-9_-]+$/);
+    assert.equal(app.id, normalizeAppId(app.id), 'Store the canonical app ID.');
     assert.equal(app.required, false, 'Drafting must work without connecting LinkedIn.');
+  }
+  const marketplacePath = resolve(root, '.agents/plugins/marketplace.json');
+  if (existsSync(marketplacePath)) {
+    const marketplace = readJson('.agents/plugins/marketplace.json');
+    assert.equal(marketplace.name, 'linkedin-copilot');
+    assert.equal(marketplace.plugins.length, 1);
+    assert.equal(marketplace.plugins[0].name, manifest.name);
+    assert.equal(marketplace.plugins[0].source.url, 'https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git');
+    assert.equal(marketplace.plugins[0].policy.authentication, 'ON_USE');
   }
   const dirs = readdirSync(resolve(root, 'skills'), { withFileTypes: true }).filter(d => d.isDirectory());
   assert.equal(dirs.length, 12, 'Expected eleven workflows and one router.');

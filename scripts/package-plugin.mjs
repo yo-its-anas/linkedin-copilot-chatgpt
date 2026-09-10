@@ -2,19 +2,23 @@ import { cpSync, readFileSync, writeFileSync, mkdirSync, mkdtempSync, readdirSyn
 import { resolve, join, relative } from 'node:path';
 import { zipSync } from 'fflate';
 import { validatePlugin, repository } from './validate-plugin.mjs';
+import { normalizeAppId } from './plugin-config.mjs';
 
 const args = process.argv.slice(2);
 const options = {};
 for (let i = 0; i < args.length; i++) {
   const key = args[i];
   if (key === '--production') options.production = true;
+  else if (key === '--skills-only') options.skillsOnly = true;
   else if (['--url', '--app-id', '--publisher', '--website', '--privacy', '--terms'].includes(key) && args[i + 1]) options[key.slice(2)] = args[++i];
   else throw new Error(`Unknown or incomplete argument: ${key}`);
 }
+if (options.skillsOnly && (options.url || options['app-id'] || options.production)) throw new Error('--skills-only cannot include a connection or production mode.');
+const skillsOnly = Boolean(options.skillsOnly || (!options.url && !options['app-id'] && !options.production));
 const endpoint = new URL(options.url ?? 'http://localhost:3000/mcp');
 if (endpoint.pathname !== '/mcp' || endpoint.search || endpoint.hash || endpoint.username || endpoint.password) throw new Error('--url must be an exact /mcp endpoint without credentials, query or fragment.');
 if (endpoint.protocol !== 'https:' && !(endpoint.protocol === 'http:' && endpoint.hostname === 'localhost')) throw new Error('Remote MCP URLs require HTTPS.');
-if (options['app-id'] && !/^(plugin_asdk_app|connector_)[A-Za-z0-9_-]+$/.test(options['app-id'])) throw new Error('Use the actual registered OpenAI technical app ID.');
+if (options['app-id']) options['app-id'] = normalizeAppId(options['app-id']);
 if (options.production) {
   if (endpoint.protocol !== 'https:' || /(^|\.)(localhost|example|test|invalid)$|(^|\.)example\.(com|org|net)$/.test(endpoint.hostname)) throw new Error('Production packaging requires the real public HTTPS endpoint.');
   for (const key of ['app-id', 'publisher', 'website', 'privacy', 'terms']) if (!options[key]) throw new Error(`Production packaging requires --${key}.`);
@@ -39,8 +43,17 @@ const manifest = json('plugin.json');
 const overlay = json('.codex-plugin/plugin.json');
 const portable = json('mcp.json');
 const compatibility = json('.mcp.json');
-portable.mcpServers['linkedin-copilot-chatgpt'].url = endpoint.href;
-compatibility.mcpServers['linkedin-copilot-chatgpt'].url = endpoint.href;
+portable.mcpServers = {};
+compatibility.mcpServers = {};
+delete overlay.mcpServers;
+delete overlay.apps;
+delete manifest.extensions['com.openai'].apps;
+save('.app.json', { apps: {} });
+if (!skillsOnly && !options['app-id']) {
+  portable.mcpServers[manifest.name] = { type: 'streamable-http', url: endpoint.href };
+  compatibility.mcpServers[manifest.name] = { type: 'http', url: endpoint.href };
+  overlay.mcpServers = './.mcp.json';
+}
 if (options['app-id']) {
   save('.app.json', { apps: { 'linkedin-copilot-chatgpt': { id: options['app-id'], required: false } } });
   manifest.extensions['com.openai'].apps = './.app.json';
@@ -70,4 +83,4 @@ function walk(directory) {
 walk(folder);
 const archive = join(output, 'linkedin-copilot-chatgpt.zip');
 writeFileSync(archive, zipSync(files, { level: 6 }));
-console.log(JSON.stringify({ archive, folder, mode: options.production ? 'production candidate (requires review)' : 'development', registeredApp: Boolean(options['app-id']), files: Object.keys(files).length }, null, 2));
+console.log(JSON.stringify({ archive, folder, mode: options.production ? 'production candidate (requires review)' : skillsOnly ? 'skills-only' : options['app-id'] ? 'registered-app' : 'desktop-mcp', registeredApp: Boolean(options['app-id']), files: Object.keys(files).length }, null, 2));

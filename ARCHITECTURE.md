@@ -39,6 +39,22 @@ Sources: [packaging](https://developers.openai.com/plugins/build/plugins),
 [skills](https://developers.openai.com/plugins/build/skills),
 [MCP server and skill import](https://developers.openai.com/plugins/build/mcp-server).
 
+## Installation and conversational onboarding
+
+The repository includes a GitHub marketplace at `.agents/plugins/marketplace.json`.
+Version 2.1 defaults to a skills-only package with empty MCP configuration; no
+localhost process is required to install the writing workflows. A registered-app
+bundle uses a canonical `asdk_app_`, `connector_`, or `templated_apps_` mapping.
+An explicit `--url` produces the separate desktop MCP development bundle.
+
+The server exposes two anonymous, read-only help tools. `linkedin_get_copilot_guide`
+reports this product's workflows and configured catalog without checking an account.
+`linkedin_get_workflow` reads a fixed allowlist of canonical skill files and JSON
+references, allowing ChatGPT to apply the workflow in the current conversation.
+These tools do not install skills, save preferences or call LinkedIn. Docker includes
+the same `skills/` library used by the native package. All existing account tools
+retain their independent authentication and authorization checks.
+
 ## Authentication and data boundaries
 
 ChatGPT authenticates to this server using a preconfigured OAuth client,

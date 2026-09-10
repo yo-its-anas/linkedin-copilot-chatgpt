@@ -1,5 +1,3 @@
 {
-  "mcpServers": {
-    "linkedin-copilot-chatgpt": { "type": "http", "url": "http://localhost:3000/mcp" }
-  }
+  "mcpServers": {}
 }

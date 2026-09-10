@@ -1,4 +1,4 @@
-﻿# LinkedIn Copilot for ChatGPT
+# LinkedIn Copilot for ChatGPT
 
 **Your AI-powered LinkedIn content, engagement and growth agent — built natively for ChatGPT.**
 
@@ -6,7 +6,27 @@ Built and maintained by **Muhammad Anas**
 
 [LinkedIn Profile](https://www.linkedin.com/in/muhammad-anas-a35b1a334/) · [GitHub Repository](https://github.com/yo-its-anas/linkedin-copilot-chatgpt) · [Available Skills](#available-skills) · [Installation](#installation)
 
-Twelve skills. Natural conversation. OAuth-connected tools. Your voice, with control over every external action.
+**Install once. Start with a draft. Keep working in the same chat.**
+
+> "Write a post about my latest DevOps project."
+>
+> "Make it sound more like me."
+>
+> "Turn it into a carousel and plan the rest of my week."
+
+LinkedIn Copilot brings reusable skills and an optional connected app together in ChatGPT. You describe the outcome; Copilot picks the relevant workflow. Connect LinkedIn when you need supported account data or actions, and review external writes through ChatGPT's permissions.
+
+**Start with ChatGPT Work on desktop:** paste this setup request into a local Work conversation that has the built-in plugin creator:
+
+```text
+@plugin-creator Add https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git
+as a plugin marketplace and help me install LinkedIn Copilot for ChatGPT.
+Use the existing package and keep LinkedIn connection optional.
+```
+
+Complete the installation in the host, then start a new conversation and ask **"What can LinkedIn Copilot help me with?"** After that, draft, edit and plan naturally in the same chat. [Setup options for desktop and workspace users](docs/INSTALLATION.md)
+
+The repository now includes a GitHub marketplace catalog. A plain GitHub link in ordinary ChatGPT does not silently install a skill into memory, and this project is not yet listed in the public directory. The default package installs writing and analysis skills without a local server. Live LinkedIn actions require a separately deployed and registered Copilot app; connecting another plugin named "LinkedIn" does not connect this one.
 
 ## Overview
 
@@ -36,7 +56,7 @@ My interests in DevOps, cloud infrastructure and software engineering shape how 
 - **Analyze inbox conversations:** triage conversations you paste or supply; live inbox access is not implemented.
 - **Perform supported actions:** publish text posts, comment, reply or delete your own posts when API access and all authorization requirements are satisfied.
 
-Saved preferences are separate from skill instructions. The packaged `user-profile/` files are blank templates, and the humanizer's style heuristics are not an AI-authorship detector.
+Installed skills are managed by ChatGPT, not stored by this app in ChatGPT memory. Saved preferences are separate from skill instructions. The packaged `user-profile/` files are blank templates, and the humanizer's style heuristics are not an AI-authorship detector.
 
 ## Architecture
 
@@ -73,6 +93,10 @@ See [the detailed architecture](ARCHITECTURE.md) and [migration guide](MIGRATION
 | `linkedin-router` | Coordinate natural-language, multi-skill requests |
 
 ## Example Conversations
+
+> "What skills does LinkedIn Copilot have?"
+
+Copilot explains its eleven focused workflows and router. If its MCP app is available, the public guide reports configured tools; an account check establishes which live requests may be possible. This does not claim that every configured feature has been authorized.
 
 > “Write a LinkedIn post about what I learned deploying a Kubernetes application. Ask me for the details you need.”
 
@@ -119,31 +143,44 @@ Disconnecting deletes local credentials and preferences and invalidates broker a
 
 ## Installation
 
-Clone the repository with Node.js **24.x** and npm installed:
+### ChatGPT Work / desktop
+
+Use the copyable setup prompt above. Where the Codex CLI is available, the equivalent marketplace command is:
+
+```sh
+codex plugin marketplace add yo-its-anas/linkedin-copilot-chatgpt --ref main
+```
+
+Then install **LinkedIn Copilot for ChatGPT** from that source in the desktop plugin browser and open a new chat. The install prompt requires an available installer and host confirmation. [Official marketplace setup](https://developers.openai.com/plugins/build/plugins).
+
+### ChatGPT workspace
+
+An admin can import this repository through **Admin > Plugins > Add > Import marketplace**, using the repository URL, an empty Path and `main` as the branch. Members install the imported plugin once it is made available to their role. Importing a catalog does not connect anyone's LinkedIn account. [Official workspace import](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
+### Optional connected actions
+
+The maintainer deploys the included MCP server and registers it as an app. Users then connect that **Copilot** app through OAuth. The registered app can expose the workflow library and supported action tools in the same conversation; private actions retain their authentication and permission checks.
+
+Build the default skills bundle or map an existing registered app:
+
+```sh
+npm run package:plugin
+npm run package:plugin -- --app-id asdk_app_YOUR_ID
+```
+
+Use the actual app ID, not its plugin listing ID. The packager also accepts a `plugin_asdk_app_...` listing ID and normalizes it to `asdk_app_...`. Registered-app bundles avoid duplicate bundled MCP declarations. A raw `--url` bundle is available for desktop development.
+
+See [the complete installation guide](docs/INSTALLATION.md) for the operator steps and current hosting prerequisites. The generated ZIP is under `release/` and excludes credentials, databases, dependencies and caches.
+
+## Local Development
+
+Contributors and self-hosting operators need Node.js **24.x** and npm:
 
 ```sh
 git clone https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git
 cd linkedin-copilot-chatgpt
 npm ci --ignore-scripts
 ```
-
-Build a local skill/plugin bundle:
-
-```sh
-npm run package:plugin
-```
-
-The command creates `release/development-*/linkedin-copilot-chatgpt.zip` and a matching plugin folder. The bundle excludes credentials, databases, dependencies and caches.
-
-For ChatGPT, register your reachable HTTPS `/mcp` endpoint using the available custom app/developer flow. Configure OAuth, connect the account and scan its tools. Then package the skills with the connection's real technical app ID:
-
-```sh
-npm run package:plugin -- --url https://YOUR-HOST/mcp --app-id plugin_asdk_app_YOUR_ID
-```
-
-Install the generated bundle through the local/private plugin flow available in your workspace. Registering MCP tools alone does not install the twelve skills. The source `.app.json` is intentionally empty until a real app ID is provided. Workspace access and installation surfaces vary; follow [ChatGPT testing](docs/CHATGPT_TESTING.md) and [submission preparation](docs/SUBMISSION.md).
-
-## Local Development
 
 Copy the example environment file. In PowerShell:
 
@@ -175,7 +212,7 @@ The container runs as a non-root user and persists encrypted SQLite on a named v
 Production candidate packaging requires the real endpoint, registered app ID, publisher and public policy URLs:
 
 ```sh
-npm run package:plugin -- --production --url https://YOUR-HOST/mcp --app-id plugin_asdk_app_YOUR_ID --publisher "Muhammad Anas" --website https://YOUR-HOST --privacy https://YOUR-HOST/privacy --terms https://YOUR-HOST/terms
+npm run package:plugin -- --production --url https://YOUR-HOST/mcp --app-id asdk_app_YOUR_ID --publisher "Muhammad Anas" --website https://YOUR-HOST --privacy https://YOUR-HOST/privacy --terms https://YOUR-HOST/terms
 ```
 
 Replace these illustrative values with your deployed service details. Packaging creates a review candidate; it does not deploy, submit or publish the app. Live OAuth, LinkedIn grants and ChatGPT approval behavior must be validated before release. See [deployment operations](docs/DEPLOYMENT.md).
@@ -202,6 +239,8 @@ Use [.env.example](.env.example) as the reference. Never commit `.env`, tokens o
 
 ## Testing
 
+Automated checks also cover public workflow access, rejection of arbitrary file paths, and skills-only, registered-app and desktop MCP packages.
+
 ```sh
 npm run check
 python -m unittest discover -s tests -p "test_*.py"
@@ -212,6 +251,8 @@ The checks compile TypeScript, run automated tests and validate plugin packaging
 For account-specific OAuth and host approval checks, follow the [live testing guide](docs/CHATGPT_TESTING.md). The deterministic routing helper is a regression aid; actual ChatGPT skill selection also needs testing in the host.
 
 ## API Compatibility Matrix
+
+Two public MCP tools support onboarding without LinkedIn login: `linkedin_get_copilot_guide` explains the product and configured tool catalog; `linkedin_get_workflow` supplies canonical workflow instructions and reference data. ChatGPT uses those instructions to draft in the current chat. These tools do not install skills or perform external actions.
 
 | Capability | Required access | Implementation |
 | --- | --- | --- |
