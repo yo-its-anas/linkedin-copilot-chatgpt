@@ -15,9 +15,9 @@ export function validatePlugin(root = repository) {
   const overlay = readJson('.codex-plugin/plugin.json');
   assert.equal(overlay.name, manifest.name);
   assert.equal(overlay.version, manifest.version);
-  const mcp = readJson('mcp.json');
+  const mcp = existsSync(resolve(root, 'mcp.json')) ? readJson('mcp.json') : { $schema: 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json', mcpServers: {} };
   assert.equal(mcp.$schema, 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
-  const apps = readJson('.app.json').apps;
+  const apps = existsSync(resolve(root, '.app.json')) ? readJson('.app.json').apps : {};
   const connection = mcp.mcpServers['linkedin-copilot-chatgpt'];
   if (connection) {
     assert.equal(connection.type, 'streamable-http');
@@ -25,7 +25,7 @@ export function validatePlugin(root = repository) {
     assert.equal(endpoint.pathname, '/mcp');
     assert.ok(endpoint.protocol === 'https:' || (endpoint.protocol === 'http:' && endpoint.hostname === 'localhost'));
   }
-  const compatibility = readJson('.mcp.json');
+  const compatibility = existsSync(resolve(root, '.mcp.json')) ? readJson('.mcp.json') : { mcpServers: {} };
   if (Object.keys(apps).length) {
     assert.equal(manifest.extensions['com.openai'].apps, './.app.json');
     assert.equal(overlay.apps, './.app.json');

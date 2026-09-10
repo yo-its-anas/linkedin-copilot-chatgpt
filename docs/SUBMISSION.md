@@ -1,7 +1,20 @@
 # Plugin Directory submission checklist
 
 This repository does not register, submit or publish an app. The publisher must
-finish these steps with their own LinkedIn application and eligible OpenAI access.
+finish the applicable route with eligible OpenAI access.
+
+## Skills-only web release
+
+Use `npm run package:web` and the prepared copy in [WEB_SETUP.md](WEB_SETUP.md).
+Choose Skills only in the submission portal. This route does not require a
+LinkedIn developer app, OAuth credentials or an MCP deployment. Complete the
+publisher/listing fields and actual host tests before submitting. Public search
+starts only after approval and publication.
+
+## Connected MCP release
+
+The steps below apply when publishing live LinkedIn capabilities. They require
+the operator's own LinkedIn application and actual product grants.
 
 1. **Provider readiness:** record actual LinkedIn product grants, verify Person ID
    resolution, validate every enabled endpoint under the selected version, and
@@ -14,8 +27,8 @@ finish these steps with their own LinkedIn application and eligible OpenAI acces
    channel, privacy policy, terms, deletion/retention procedure, truthful feature
    descriptions and regional availability. Contributor attribution is not a
    substitute for the operator's identity or legal documents.
-4. **Reviewable package:** generate a `--production` ZIP with the real registered
-   app ID and public policy URLs; verify resources, metadata, screenshots and
+4. **Reviewable package:** prepare the full skills bundle and public policy URLs; submit the actual remote
+   server through With MCP, rather than an existing integration reference; verify resources, metadata, screenshots and
    installed behavior. The full twelve-skill bundle uses upload, not an oversized
    MCP skill-import catalog.
 5. **Portal draft:** choose the remote MCP submission path, provide the endpoint

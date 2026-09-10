@@ -16,17 +16,17 @@ Built and maintained by **Muhammad Anas**
 
 LinkedIn Copilot brings reusable skills and an optional connected app together in ChatGPT. You describe the outcome; Copilot picks the relevant workflow. Connect LinkedIn when you need supported account data or actions, and review external writes through ChatGPT's permissions.
 
-**Start with ChatGPT Work on desktop:** paste this setup request into a local Work conversation that has the built-in plugin creator:
+**Using ChatGPT web?** Start with [Web setup](docs/WEB_SETUP.md). If search shows "No plugins match", this project has not been published to the directory yet. Pushing this repository does not create a public ChatGPT listing.
 
-```text
-@plugin-creator Add https://github.com/yo-its-anas/linkedin-copilot-chatgpt.git
-as a plugin marketplace and help me install LinkedIn Copilot for ChatGPT.
-Use the existing package and keep LinkedIn connection optional.
-```
+| Where you use ChatGPT | Supported route |
+| --- | --- |
+| Web with a skills-upload option under Create | Build the web bundle and follow the displayed upload/install flow |
+| Web with an MCP URL form under Create | Connect a deployed Copilot MCP endpoint; a GitHub URL is not an MCP endpoint |
+| Web workspace with admin import | Import the repository marketplace and enable the plugin for your role |
+| Public web directory | Submit the plugin, obtain approval, then publish it |
+| Desktop local Work | Add the repository marketplace through the plugin creator |
 
-Complete the installation in the host, then start a new conversation and ask **"What can LinkedIn Copilot help me with?"** After that, draft, edit and plan naturally in the same chat. [Setup options for desktop and workspace users](docs/INSTALLATION.md)
-
-The repository now includes a GitHub marketplace catalog. A plain GitHub link in ordinary ChatGPT does not silently install a skill into memory, and this project is not yet listed in the public directory. The default package installs writing and analysis skills without a local server. Live LinkedIn actions require a separately deployed and registered Copilot app; connecting another plugin named "LinkedIn" does not connect this one.
+The web skills bundle contains all twelve workflows and no server configuration. Live LinkedIn actions require the separately hosted Copilot MCP app and OAuth. A plugin named "LinkedIn" from another publisher does not connect this project.
 
 ## Overview
 
@@ -143,9 +143,31 @@ Disconnecting deletes local credentials and preferences and invalidates broker a
 
 ## Installation
 
+### ChatGPT web
+
+Build the dedicated skills bundle:
+
+```sh
+npm ci --ignore-scripts
+npm run package:web
+```
+
+The ZIP appears at `release/web-*/linkedin-copilot-chatgpt.zip`. If **Plugins > Create** offers skill or plugin uploads, follow that flow. If it asks for an MCP server URL, it is the connection path and cannot accept a repository URL or skill ZIP.
+
+For public discoverability, use the [OpenAI plugin portal](https://platform.openai.com/plugins), choose **Create plugin > Skills only**, and upload the bundle. Public search requires approval and publication; a portal draft alone is not a public listing. [Official submission guide](https://developers.openai.com/plugins/deploy/submission).
+
+[Web setup and prepared listing copy](docs/WEB_SETUP.md) explain the remaining account-side steps. The package has not yet been installed or validated in your web account.
+
 ### ChatGPT Work / desktop
 
-Use the copyable setup prompt above. Where the Codex CLI is available, the equivalent marketplace command is:
+In local desktop Work with the built-in plugin creator, use:
+
+```text
+@plugin-creator Add yo-its-anas/linkedin-copilot-chatgpt as a plugin marketplace
+and help me install LinkedIn Copilot for ChatGPT.
+```
+
+This desktop setup prompt does not publish a web plugin. Where the Codex CLI is available, the equivalent marketplace command is:
 
 ```sh
 codex plugin marketplace add yo-its-anas/linkedin-copilot-chatgpt --ref main

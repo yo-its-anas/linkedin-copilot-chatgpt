@@ -1,6 +1,6 @@
 {
   "name": "linkedin-copilot-chatgpt",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "type": "module",
   "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
@@ -15,7 +15,8 @@
     "test": "vitest run",
     "check": "npm run build && npm test && npm run validate:plugin",
     "validate:plugin": "node scripts/validate-plugin.mjs",
-    "package:plugin": "node scripts/package-plugin.mjs"
+    "package:plugin": "node scripts/package-plugin.mjs",
+    "package:web": "node scripts/package-plugin.mjs --web"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",

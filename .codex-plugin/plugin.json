@@ -1,6 +1,6 @@
 {
   "name": "linkedin-copilot-chatgpt",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "ChatGPT-native LinkedIn content, engagement and growth workflows with OAuth-connected, permission-aware MCP tools.",
   "author": {
     "name": "Muhammad Anas",

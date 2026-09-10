@@ -2,6 +2,20 @@
 
 The experience is: **install the skills once, describe your task, connect the Copilot app when a supported action needs it**. Your drafts, revisions and follow-up requests can stay in one conversation.
 
+## Start on ChatGPT web
+
+Use [Web setup](WEB_SETUP.md). A Create form that accepts skills and a Create form
+that asks for an MCP URL are different routes. The former can use a skill bundle;
+the latter needs the deployed server. Public directory search requires publication.
+
+```sh
+npm run package:web
+```
+
+This creates a bundle with no MCP or registered-app configuration files. Its
+availability in your web account still depends on completing the host's import,
+installation or publication flow.
+
 ## Start today on desktop
 
 In a local ChatGPT Work conversation with the built-in plugin creator, paste:
@@ -70,6 +84,7 @@ These public tools can guide a conversation even when filesystem skills are unav
 
 | Command | Result |
 | --- | --- |
+| `npm run package:web` | Web skills upload bundle; no MCP configuration files |
 | `npm run package:plugin` | Twelve skills; no server dependency |
 | `npm run package:plugin -- --skills-only` | Explicit skills-only package |
 | `npm run package:plugin -- --app-id asdk_app_YOUR_ID` | Skills plus optional registered app |

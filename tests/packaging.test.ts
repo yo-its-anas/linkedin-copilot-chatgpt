@@ -23,6 +23,15 @@ describe('installable package modes', () => {
     expect(json('.codex-plugin/plugin.json').mcpServers).toBeUndefined();
     expect(Object.keys(files).some(name => /(?:node_modules|__pycache__|\.env$|\.sqlite$)/.test(name))).toBe(false);
   }, 15000);
+  it('builds a web skills bundle without any MCP or app configuration files', () => {
+    const { files, json } = bundle('--web');
+    for (const file of ['mcp.json', '.mcp.json', '.app.json']) expect(files[`linkedin-copilot-chatgpt/${file}`]).toBeUndefined();
+    expect(json('.codex-plugin/plugin.json').mcpServers).toBeUndefined();
+    expect(json('plugin.json').extensions['com.openai'].apps).toBeUndefined();
+    expect(json('plugin.json').extensions['com.openai'].interface.longDescription).toContain('no LinkedIn account connection');
+    expect(json('plugin.json').extensions['com.openai'].interface.capabilities).toEqual([]);
+    expect(Object.keys(files).filter(name => name.endsWith('/SKILL.md'))).toHaveLength(12);
+  }, 15000);
   it.each(['asdk_app_test', 'plugin_asdk_app_test', 'connector_test', 'templated_apps_test'])('maps %s without duplicate server wiring', id => {
     const { json } = bundle('--app-id', id);
     expect(json('.app.json').apps['linkedin-copilot-chatgpt']).toEqual({ id: id.replace(/^plugin_/, ''), required: false });
@@ -36,7 +45,7 @@ describe('installable package modes', () => {
     expect(json('.mcp.json').mcpServers['linkedin-copilot-chatgpt'].url).toBe('http://localhost:3000/mcp');
     expect(json('.codex-plugin/plugin.json').mcpServers).toBe('./.mcp.json');
   }, 15000);
-  it.each([['--skills-only', '--app-id', 'asdk_app_test'], ['--app-id', 'plugin_unrelated'], ['--production']])('rejects an invalid or incomplete installation mode %j', (...args) => {
+  it.each([['--web', '--url', 'https://example.com/mcp'], ['--skills-only', '--app-id', 'asdk_app_test'], ['--app-id', 'plugin_unrelated'], ['--production']])('rejects an invalid or incomplete installation mode %j', (...args) => {
     expect(() => execFileSync(process.execPath, ['scripts/package-plugin.mjs', ...args], { stdio: 'pipe' })).toThrow();
   });
 });

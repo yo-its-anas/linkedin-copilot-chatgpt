@@ -10,6 +10,7 @@ for (let i = 0; i < args.length; i++) {
   const key = args[i];
   if (key === '--production') options.production = true;
   else if (key === '--skills-only') options.skillsOnly = true;
+  else if (key === '--web') { options.web = true; options.skillsOnly = true; }
   else if (['--url', '--app-id', '--publisher', '--website', '--privacy', '--terms'].includes(key) && args[i + 1]) options[key.slice(2)] = args[++i];
   else throw new Error(`Unknown or incomplete argument: ${key}`);
 }
@@ -30,25 +31,26 @@ if (options.production) {
 validatePlugin();
 const release = resolve(repository, 'release');
 mkdirSync(release, { recursive: true });
-const output = mkdtempSync(join(release, options.production ? 'production-' : 'development-'));
+const output = mkdtempSync(join(release, options.web ? 'web-' : options.production ? 'production-' : 'development-'));
 const folder = join(output, 'linkedin-copilot-chatgpt');
 mkdirSync(folder);
 // Explicit allowlist excludes environment files, credentials, database, caches and dependencies.
 for (const path of ['plugin.json', 'mcp.json', '.mcp.json', '.app.json', '.codex-plugin', 'skills', 'user-profile', 'LICENSE', 'README.md', 'MIGRATION.md', 'ARCHITECTURE.md', 'SECURITY.md', 'docs']) {
+  if (options.web && ['mcp.json', '.mcp.json', '.app.json'].includes(path)) continue;
   cpSync(join(repository, path), join(folder, path), { recursive: true, filter: source => !source.endsWith('.pyc') && !source.includes('__pycache__') });
 }
 const json = path => JSON.parse(readFileSync(join(folder, path), 'utf8'));
 const save = (path, value) => writeFileSync(join(folder, path), `${JSON.stringify(value, null, 2)}\n`);
 const manifest = json('plugin.json');
 const overlay = json('.codex-plugin/plugin.json');
-const portable = json('mcp.json');
-const compatibility = json('.mcp.json');
+const portable = options.web ? { mcpServers: {} } : json('mcp.json');
+const compatibility = options.web ? { mcpServers: {} } : json('.mcp.json');
 portable.mcpServers = {};
 compatibility.mcpServers = {};
 delete overlay.mcpServers;
 delete overlay.apps;
 delete manifest.extensions['com.openai'].apps;
-save('.app.json', { apps: {} });
+if (!options.web) save('.app.json', { apps: {} });
 if (!skillsOnly && !options['app-id']) {
   portable.mcpServers[manifest.name] = { type: 'streamable-http', url: endpoint.href };
   compatibility.mcpServers[manifest.name] = { type: 'http', url: endpoint.href };
@@ -69,7 +71,15 @@ for (const target of [manifest.extensions['com.openai'].interface, overlay.inter
   if (options.terms) target.termsOfServiceURL = options.terms;
 }
 if (options.publisher) { manifest.author = { name: options.publisher }; overlay.author = { name: options.publisher }; }
-save('plugin.json', manifest); save('.codex-plugin/plugin.json', overlay); save('mcp.json', portable); save('.mcp.json', compatibility);
+if (options.web) {
+  for (const target of [manifest, overlay]) target.description = 'Twelve reusable LinkedIn writing and analysis skills for ChatGPT. Draft, plan, humanize and repurpose supplied content in one conversation.';
+  for (const target of [manifest.extensions['com.openai'].interface, overlay.interface]) {
+    target.longDescription = 'Draft posts, plan content, review supplied profiles and metrics, humanize writing, create carousel copy and prepare engagement replies. This skills-only package includes no LinkedIn account connection or live actions.';
+    target.capabilities = [];
+  }
+}
+save('plugin.json', manifest); save('.codex-plugin/plugin.json', overlay);
+if (!options.web) { save('mcp.json', portable); save('.mcp.json', compatibility); }
 validatePlugin(folder);
 const files = {};
 function walk(directory) {
@@ -83,4 +93,4 @@ function walk(directory) {
 walk(folder);
 const archive = join(output, 'linkedin-copilot-chatgpt.zip');
 writeFileSync(archive, zipSync(files, { level: 6 }));
-console.log(JSON.stringify({ archive, folder, mode: options.production ? 'production candidate (requires review)' : skillsOnly ? 'skills-only' : options['app-id'] ? 'registered-app' : 'desktop-mcp', registeredApp: Boolean(options['app-id']), files: Object.keys(files).length }, null, 2));
+console.log(JSON.stringify({ archive, folder, mode: options.web ? 'web-skills (requires host import or publication)' : options.production ? 'production candidate (requires review)' : skillsOnly ? 'skills-only' : options['app-id'] ? 'registered-app' : 'desktop-mcp', registeredApp: Boolean(options['app-id']), files: Object.keys(files).length }, null, 2));
