@@ -36,7 +36,7 @@ export function callCopilotTool(name: string, input: unknown, configuredTools: s
       configuredTools,
       accountStatus: 'Not checked. Configured tools are not proof of account authorization; use linkedin_get_connection_status for live requests.',
       gettingStarted: 'Ask for a post, weekly plan, carousel or review and supply the source material. Load the relevant workflow only when needed. Carry the draft through follow-up requests in this chat.',
-      connection: 'Drafting needs no LinkedIn login. Saved preferences and supported account actions require this Copilot app connection, granted scopes and host permissions. A separate LinkedIn search connector does not supply this app connection.',
+      connection: 'Drafting needs no LinkedIn login. Prefer an authorized host-connected LinkedIn tool if it supports the requested operation. This server cannot inspect other connectors or inherit their tokens; its own private tools and saved preferences require its OAuth connection. Search-only tools cannot supply post analytics.',
       persistence: 'The host manages installed skills. These public help tools do not install skills or write ChatGPT memory. Save reviewed preferences with linkedin_update_user_context only when requested and authenticated.',
       unavailableActions: ['people search', 'live inbox reads', 'DM or invitation sending', 'profile editing', 'media upload', 'reactions', 'scheduled publishing'],
     };
@@ -49,6 +49,7 @@ export function callCopilotTool(name: string, input: unknown, configuredTools: s
     result = {
       workflow: id,
       instructions: readFileSync(new URL('SKILL.md', directory), 'utf8'),
+      connectorGuidance: readFileSync(new URL('../skills/CONNECTORS.md', import.meta.url), 'utf8'),
       resources: Object.fromEntries((resources[id] ?? []).map(file => [file, JSON.parse(readFileSync(new URL(file, directory), 'utf8'))])),
       execution: 'Apply these instructions in ChatGPT. Resolve links to another skill through linkedin_get_workflow if needed. Optional Python helpers require an available local file runtime; use editorial reasoning otherwise. Do not claim a script ran or a skill was installed.',
     };

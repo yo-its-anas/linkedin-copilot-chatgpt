@@ -32,6 +32,10 @@ The six files in `user-profile/` are blank templates, not account storage. Save 
 
 ## Available MCP tools
 
+Before requesting account access, apply [connector selection](../CONNECTORS.md).
+Use an already connected tool when it supports this operation; the names below
+describe the optional Copilot backend, not a requirement to replace that connection.
+
 Read: linkedin_get_connection_status, linkedin_get_user_context, linkedin_get_recent_posts, linkedin_get_post, linkedin_get_post_metrics, and linkedin_get_comments when individually available under approved scopes. No read capability is guaranteed by signing in. If recent-post access or analytics is unavailable, request a pasted table, screenshots, or the user's own export. No scraping or unofficial endpoints.
 
 Discover the actual tools before calling them. Permission errors, missing product access, and expired credentials are limitations to report, never reasons to switch to unofficial access. Only request a connection when supported account data or actions are actually needed.

@@ -95,3 +95,41 @@ Production packaging additionally checks the actual HTTPS endpoint and publisher
 ## Installed, connected and remembered are different states
 
 The host manages installed skills and their availability in new chats. The Copilot app stores only reviewed writing preferences saved through its authenticated context tool. It does not install into ChatGPT memory, run continuously in the background or silently authorize LinkedIn actions. Ordinary drafting uses the context available in the current conversation.
+
+
+## Downloaded repository vs active skills
+
+Downloading the repository into a host's skills directory previously left no
+`SKILL.md` at that directory's root. Version 2.1.2 adds the missing standalone
+entry point. A host that discovers this path can activate `linkedin-copilot-chatgpt`
+and follow its links to all twelve bundled workflows. This is one entry point,
+not a claim that the twelve nested folders were separately registered.
+
+If a file-capable Work environment already downloaded the repository, ask it:
+
+```text
+Update the downloaded linkedin-copilot-chatgpt repository from origin/main,
+preserving any local edits. Load its root SKILL.md and use the audit workflow.
+Check the LinkedIn tools already available in this chat before asking me to
+connect anything. Use them if they expose my posts and comparable metrics.
+```
+
+That request can apply the instructions in the current file-capable conversation.
+It does not guarantee account-wide web installation; the host's supported skill
+or plugin installation controls determine persistence and discovery. Installing
+individual `skills/linkedin-*` folders is also supported by a local skill installer;
+use the native plugin when all twelve must appear as individual plugin skills.
+
+## Connected does not mean every LinkedIn capability is available
+
+The workflows prefer existing authorized tools that match the request. They do
+not require this repository's MCP tool names when an equivalent connected tool
+exists. ChatGPT must inspect the actual tool catalog, not infer it from a plugin's
+name. A connector's tokens are never copied into the Copilot backend.
+
+If the active LinkedIn tool only searches people, the skills can use its returned
+profile information where relevant, but cannot retrieve your posts, impressions
+or inbox. Installing more instructions or reconnecting the same search-only
+connector does not add those operations. An automatic performance audit needs a
+tool exposing authorized post IDs and comparable metrics. Otherwise supplied
+data is the available fallback. See [connector selection](../skills/CONNECTORS.md).

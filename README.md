@@ -26,7 +26,20 @@ LinkedIn Copilot brings reusable skills and an optional connected app together i
 | Public web directory | Submit the plugin, obtain approval, then publish it |
 | Desktop local Work | Add the repository marketplace through the plugin creator |
 
-The web skills bundle contains all twelve workflows and no server configuration. Live LinkedIn actions require the separately hosted Copilot MCP app and OAuth. A plugin named "LinkedIn" from another publisher does not connect this project.
+The web skills bundle contains all twelve workflows and no server configuration. The skills can use an already connected LinkedIn tool when it supports the requested operation. Copilot's own MCP tools require its separately hosted app and OAuth. Connecting a search-only LinkedIn plugin does not add post analytics.
+
+## Using your connected LinkedIn
+
+Copilot now checks tools already available in the chat before asking for a separate
+connection. If a connected tool can read your posts and metrics, the audit skill
+can use it. A people-search tool cannot fetch private post analytics, regardless
+of how many writing skills are installed.
+
+For hosts that install a repository as one local skill, the root `SKILL.md` now
+provides a single Copilot entry point with all twelve workflows. The native
+plugin continues to expose the twelve individual skills. Loading workflow
+instructions does not require compiling TypeScript or starting the MCP server.
+[Downloaded vs active skills, and connector troubleshooting](docs/INSTALLATION.md#downloaded-repository-vs-active-skills).
 
 ## Overview
 

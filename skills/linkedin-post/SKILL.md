@@ -32,6 +32,10 @@ The six files in `user-profile/` are blank templates, not account storage. Save 
 
 ## Available MCP tools
 
+Before requesting account access, apply [connector selection](../CONNECTORS.md).
+Use an already connected tool when it supports this operation; the names below
+describe the optional Copilot backend, not a requirement to replace that connection.
+
 Read: linkedin_get_user_context, linkedin_get_connection_status. Write: linkedin_update_user_context for requested preference changes; linkedin_create_post for supported text-only publication. A draft needs no LinkedIn account. Check the actual tool list and connection capabilities before promising publication.
 
 Discover the actual tools before calling them. Permission errors, missing product access, and expired credentials are limitations to report, never reasons to switch to unofficial access. Only request a connection when supported account data or actions are actually needed.
@@ -58,5 +62,5 @@ Three hook options and one complete draft unless the user requests another forma
 
 ## External-action rules
 
-Drafting or saying a post is ready does not authorize publishing. For an explicit publish request, use linkedin_create_post with the reviewed content, target visibility, and a fresh request_id, subject to ChatGPT permissions. Never send an approved boolean as a substitute for approval. On an uncertain write outcome, reconcile the result before retrying; do not create duplicate posts.
+Drafting or saying a post is ready does not authorize publishing. For an explicit publish request, use an available authorized publishing tool with the reviewed content and target visibility, subject to ChatGPT permissions. With the Copilot backend, use linkedin_create_post and a fresh request_id; other connectors use their own schemas. Never send an approved boolean as a substitute for approval. On an uncertain write outcome, reconcile the result before retrying; do not create duplicate posts.
 

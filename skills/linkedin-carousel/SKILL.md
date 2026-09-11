@@ -32,6 +32,10 @@ The six files in `user-profile/` are blank templates, not account storage. Save 
 
 ## Available MCP tools
 
+Before requesting account access, apply [connector selection](../CONNECTORS.md).
+Use an already connected tool when it supports this operation; the names below
+describe the optional Copilot backend, not a requirement to replace that connection.
+
 Read: linkedin_get_user_context, linkedin_get_post when the authorized own-post read is available, linkedin_get_connection_status. Use pasted content if unavailable. This app has no document/media upload tool; linkedin_create_post supports text only. Local artifact tools, when available, can create the file without connecting LinkedIn.
 
 Discover the actual tools before calling them. Permission errors, missing product access, and expired credentials are limitations to report, never reasons to switch to unofficial access. Only request a connection when supported account data or actions are actually needed.

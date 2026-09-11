@@ -28,8 +28,9 @@ If an installed skill cannot be loaded but the Copilot MCP app is available,
 `linkedin_get_workflow` can return its canonical instructions and reference data.
 Use it for the selected workflow only; it does not install a skill or execute it.
 
-Never substitute a different LinkedIn connector for this product or claim its
-capabilities from its name. Discover the tools actually exposed in this chat.
+Use an existing connected LinkedIn tool when it supports the requested operation.
+Do not mislabel that connector as this product or infer capabilities from its name.
+Discover the tools actually exposed in this chat before proposing another connection.
 Do not claim installation, connection, persistent memory or a completed action
 without a corresponding host/tool result. Installed skills belong to the host;
 saved writing preferences belong to the authenticated Copilot app. A GitHub URL
@@ -52,6 +53,10 @@ them. Ask only for missing facts that affect the result. User-profile templates
 are immutable blanks; saved context lives in the authenticated app.
 
 ## Available MCP tools
+
+Before requesting account access, apply [connector selection](../CONNECTORS.md).
+Use an already connected tool when it supports this operation; the names below
+describe the optional Copilot backend, not a requirement to replace that connection.
 
 Use `linkedin_get_connection_status` only when connected capabilities matter.
 Read preferences with `linkedin_get_user_context` when helpful; save a complete

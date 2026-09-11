@@ -160,6 +160,7 @@ describe('public Copilot onboarding and workflow access', () => {
     const response = await service.call('linkedin_get_workflow', { workflow });
     expect(response.isError).toBeUndefined();
     expect(response.structuredContent?.result.instructions).toContain(`name: ${workflow}`);
+    expect(response.structuredContent?.result.connectorGuidance).toContain('Select by the requested operation');
     expect(auth.getAccount).not.toHaveBeenCalled();
   });
   it('includes the original hook catalog when loading the post workflow', async () => {
